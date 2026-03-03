@@ -5,6 +5,8 @@ import com.pm.patient_service.dto.PatientMapper;
 import com.pm.patient_service.entity.Patient;
 import com.pm.patient_service.exception.EmailExistException;
 import com.pm.patient_service.exception.PatientNotFoundException;
+import com.pm.patient_service.grpc.BillingServiceGrpcClient;
+import com.pm.patient_service.kafka.KafkaProducer;
 import com.pm.patient_service.repository.PatientRepo;
 import com.pm.patient_service.service.PatientService;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,13 @@ import java.util.UUID;
 
 @Service
 public class PatientServiceImpl implements PatientService {
-    PatientRepo patientRepo;
-    public PatientServiceImpl(PatientRepo patientRepo){
+    private final PatientRepo patientRepo;
+    private final KafkaProducer kafkaProducer;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
+    public PatientServiceImpl(PatientRepo patientRepo,KafkaProducer kafkaProducer,BillingServiceGrpcClient billingServiceGrpcClient){
         this.patientRepo=patientRepo;
+        this.kafkaProducer=kafkaProducer;
+        this.billingServiceGrpcClient=billingServiceGrpcClient;
     }
 
     @Override
@@ -34,8 +40,14 @@ public class PatientServiceImpl implements PatientService {
         }
         Patient patient=PatientMapper.DTOtoPatient(patientDto);
 
+
         System.out.println(patient.getName());
-        return PatientMapper.PatientToDTO(patientRepo.save(patient));
+        Patient patient1=patientRepo.save(patient);
+        System.out.println("okay");
+        billingServiceGrpcClient.createBillingAccount(patient1.getId().toString(),patient1.getName(),patient1.getEmail());
+        kafkaProducer.sendEvent(patient1);
+
+        return PatientMapper.PatientToDTO(patient1);
     }
 
     @Override
@@ -62,7 +74,12 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public String deletePatientById(String id) {
         Patient patient=patientRepo.findById(UUID.fromString(id)).orElseThrow(()->new PatientNotFoundException("Patient Not Found with "+id));
-        if(patient!=null) return "Patient with Id "+id+" deleted Successfully";
+
+        if(patient!=null) {
+            patientRepo.deleteById(UUID.fromString(id));
+            return "Patient with Id " + id + " deleted Successfully";
+        }
+
         return "Patient not found";
     }
 }

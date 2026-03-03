@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: patient_mysql
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: patientdb
+      MYSQL_USER: patientuser
+      MYSQL_PASSWORD: patientpass
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+    command: [
+      "--default-authentication-plugin=mysql_native_password",
+      "--lower_case_table_names=1"
+    ]
+
+    networks:
+      - patient-net
+
+networks:
+  patient-net:
+    external: true
