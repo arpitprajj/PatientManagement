@@ -1,0 +1,5 @@
+.idea/
+target/
+infrastructure/
+integration-tests/
+auth-service/mysql-data/

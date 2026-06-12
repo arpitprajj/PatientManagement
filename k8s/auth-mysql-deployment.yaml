@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: auth-mysql
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: auth-mysql
+
+  template:
+    metadata:
+      labels:
+        app: auth-mysql
+
+    spec:
+      containers:
+        - name: auth-mysql
+
+          image: mysql:8.0
+
+          ports:
+            - containerPort: 3306
+
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: rootpassword
+
+            - name: MYSQL_DATABASE
+              value: authdb
+
+            - name: MYSQL_USER
+              value: patientuser
+
+            - name: MYSQL_PASSWORD
+              value: patientpass
+
+          args:
+            - "--default-authentication-plugin=mysql_native_password"
+            - "--lower_case_table_names=1"
