@@ -37,8 +37,8 @@
            context: ./patient-service
            push: true
            tags: |
-             arpitprajj/patient-service:latest
-             arpitprajj/patient-service:${{ github.sha }}
+             arpit420/patient-service:latest
+             arpit420/patient-service:${{ github.sha }}
 
        # ── 5. Build + Push: billing-service ──
        - name: Build & Push billing-service
@@ -47,8 +47,8 @@
            context: ./billing-service
            push: true
            tags: |
-             arpitprajj/billing-service:latest
-             arpitprajj/billing-service:${{ github.sha }}
+             arpit420/billing-service:latest
+             arpit420/billing-service:${{ github.sha }}
 
        # ── 6. Build + Push: analytics-service ──
        - name: Build & Push analytics-service
@@ -57,8 +57,8 @@
            context: ./analytics-service
            push: true
            tags: |
-             arpitprajj/analytics-service:latest
-             arpitprajj/analytics-service:${{ github.sha }}
+             arpit420/analytics-service:latest
+             arpit420/analytics-service:${{ github.sha }}
 
        # ── 7. Build + Push: api-gateway ──
        - name: Build & Push api-gateway
@@ -67,8 +67,8 @@
            context: ./api-gateway
            push: true
            tags: |
-             arpitprajj/api-gateway:latest
-             arpitprajj/api-gateway:${{ github.sha }}
+             arpit420/api-gateway:latest
+             arpit420/api-gateway:${{ github.sha }}
 
        # ── 8. Deploy to Minikube ──
        - name: Deploy to Minikube
