@@ -70,7 +70,7 @@
              arpit420/api-gateway:latest
              arpit420/api-gateway:${{ github.sha }}
 
-       # ── 8. Deploy to Minikube ──
+
        - name: Deploy to Minikube
          run: |
            # Make sure minikube is running
