@@ -7,6 +7,8 @@
  jobs:
    build-and-deploy:
      runs-on: self-hosted   # ← runs on YOUR machine with Minikube
+     env:
+       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
      steps:
        # ── 1. Checkout ──
