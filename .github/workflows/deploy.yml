@@ -74,7 +74,10 @@
        - name: Deploy to Minikube
          run: |
            # Make sure minikube is running
-           minikube status || minikube start
+           minikube status 
+           if ($LASTEXITCODE -ne 0) {
+            minikube start
+            }
 
            # Apply all manifests
            kubectl apply -f k8s/
